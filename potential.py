@@ -1,5 +1,7 @@
+from __future__ import annotations
 import numpy as np
 import numpy.typing as npt
+from abc import ABC, abstractmethod
 from typing import Final
 
 PLATE_POTENTIAL: Final = 10
@@ -19,25 +21,37 @@ class Coords:
         return self.x, self.y, self.z
 
 
-class Plate:
-    pass
+class GridElement(ABC):
+    """Abstract class to define elements with a fixed potential to insert in the grid"""
+    @abstractmethod
+    def update_grid(self, grid: Grid):
+        pass
 
 
-class PotentialGrid:
+class Plate(GridElement):
+    def update_grid(self, grid: Grid):
+        print("not implemented yet")
+        pass
+
+
+class Grid:
     """Class representing a 3D grid with a capacitor inside.
     The class wraps a few numpy arrays to get the best performances """
 
-    def set_node(self, coords: Coords, value: int = None, lock: bool = False):
+    def set_node(self, coords: Coords, value: int = None, lock: bool = False) -> None:
         """Allows to set the potential for a specific point of the grid and eventually lock it"""
         if value is not None:
             self.potential[coords.as_tuple()] = value
         self.locked[coords.as_tuple()] = int(lock)
 
-    def average_node(self, coords: Coords):
+    def average_node(self, coords: Coords) -> None:
         x, y, z = coords.as_tuple()
         self.potential[x, y, z] = (self.potential[x + 1, y, z] + self.potential[x - 1, y, z] +
                                    self.potential[x, y + 1, z] + self.potential[x, y - 1, z] +
                                    self.potential[x, y, z + 1] + self.potential[x, y, z - 1]) / 6
+
+    def add_element(self, element: GridElement) -> None:
+        element.update_grid(self)
 
     def __init__(self, grid_length: int, distance: int, width: int, height: int):
         self.grid_length: npt.ArrayLike = grid_length
