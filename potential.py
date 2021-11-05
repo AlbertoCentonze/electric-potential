@@ -1,8 +1,10 @@
 import numpy as np
 import numpy.typing as npt
 
+
 class Plate:
     pass
+
 
 class PotentialGrid:
     """Class representing a 3D grid with a capacitor  inside"""
@@ -85,36 +87,11 @@ class PotentialGrid:
                                                        self.potential[x, y + 1, z] + self.potential[x, y - 1, z] +
                                                        self.potential[x, y, z + 1] + self.potential[x, y, z - 1]) / 6
 
-#   def show_section(self, z: int):
-#       win_x, win_y = 1000, 1000
-#       win = GraphWin(f"2D section of the potential at height {z}", win_x, win_y)
-#       win.setBackground("black")
-#       win.setCoords(-5, -5, (self.grid_length * 2) +
-#                     5, (self.grid_length * 2) + 5)
-#
-#       for x in range(0, 2 * self.grid_length):
-#           for y in range(0, 2 * self.grid_length):
-#               c = Circle(Point(x, y), .3)
-#               c.setOutline("white")
-#               c.draw(win)
-#               if self.potential[x, y, z] > 0:
-#                   c.setFill("orange")
-#               if self.potential[x, y, z] > 2:
-#                   c.setFill("red")
-#               if self.potential[x, y, z] < 0:
-#                   c.setFill("cyan")
-#               if self.potential[x, y, z] < -2:
-#                   c.setFill("blue")
-#               if self.locked[x, y, z]:
-#                   c.setFill("white")
-#
-#       while True:
-#           pass
 
-
-ourGrid = PotentialGrid(10, 2, 4, 5)
-ourGrid.update(700)
-ourGrid.write_potential("potential.fas")
-ourGrid.write_potential("abs-potential.fas", absolute=True)
-ourGrid.write_capacitor("capacitor.fas")
-ourGrid.write_locked("locked.fas")
+if __name__ == "__main__":
+    ourGrid = PotentialGrid(10, 2, 4, 5)
+    ourGrid.update(700)
+    ourGrid.write_potential("potential.fas")
+    ourGrid.write_potential("abs-potential.fas", absolute=True)
+    ourGrid.write_capacitor("capacitor.fas")
+    ourGrid.write_locked("locked.fas")
