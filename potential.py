@@ -12,18 +12,23 @@ class Grid:
     """Class representing a 3D grid with a capacitor inside.
     The class wraps a few numpy arrays to get the best performances """
 
-    def set_cell(self, coords: Coords, value: int = None, lock: bool = False) -> None:
+    def set_cell(self, coords: Coords, value: int = None, lock: bool = None) -> None:
         """Allows to set the potential for a specific point of the grid and eventually lock it"""
         coords = astuple(coords)
+        # TODO check syntax for None
+        if value is None and lock is None:
+            raise Exception("The method is not doing anything, you should check the code")
         if value is not None:
             self.potential[coords] = value
-        self.locked[coords] = int(lock)
+        if lock is not None:
+            self.locked[coords] = int(lock)
 
     def average_cell(self, coords: Coords) -> None:
         x, y, z = astuple(coords)
-        self.potential[x, y, z] = (self.potential[x + 1, y, z] + self.potential[x - 1, y, z] +
-                                   self.potential[x, y + 1, z] + self.potential[x, y - 1, z] +
-                                   self.potential[x, y, z + 1] + self.potential[x, y, z - 1]) / 6
+        neighbours = (self.potential[x + 1, y, z], self.potential[x - 1, y, z],
+                      self.potential[x, y + 1, z], self.potential[x, y - 1, z],
+                      self.potential[x, y, z + 1], self.potential[x, y, z - 1])
+        self.potential[x, y, z] = np.mean(neighbours)
 
     def add_element(self, element: GridElement) -> None:
         # TODO
@@ -54,10 +59,6 @@ class Grid:
                     # block edges potential
                     elif x == 0 or x == double_edge or y == 0 or y == double_edge or z == 0 or z == double_edge:
                         self.set_cell(node, value=NO_CHARGE, lock=True)
-
-    def is_capacitor(self, coords: Coords):
-        coords_tuple: (int, int, int) = astuple(coords)
-        return self.is_locked(coords) and abs(self.potential[coords_tuple] == MAX_CHARGE)
 
     def is_locked(self, coords: Coords):
         coords: (int, int, int) = astuple(coords)
