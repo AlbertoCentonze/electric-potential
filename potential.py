@@ -56,11 +56,11 @@ class Grid:
                         self.set_cell(node, value=NO_CHARGE, lock=True)
 
     def is_capacitor(self, coords: Coords):
-        coords_tuple: (int, int, int) = coords.as_tuple()
+        coords_tuple: (int, int, int) = astuple(coords)
         return self.is_locked(coords) and abs(self.potential[coords_tuple] == MAX_CHARGE)
 
     def is_locked(self, coords: Coords):
-        coords: (int, int, int) = coords.as_tuple()
+        coords: (int, int, int) = astuple(coords)
         return self.locked[coords]
 
     def update_node(self, c: Coords):

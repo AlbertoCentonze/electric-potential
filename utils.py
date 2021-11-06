@@ -18,9 +18,6 @@ class Coords:
         if value < 0:
             raise ValueError("Coordinates can't be negative")
 
-    def as_tuple(self) -> (int, int, int):
-        return self.x, self.y, self.z
-
 
 def iter_3d(func, width: int, height: int, depth: int):
     for x in range(width):
