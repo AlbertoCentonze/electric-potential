@@ -3,6 +3,7 @@ from potential import Grid
 
 
 class GridTest(unittest.TestCase):
+    # TODO
     def test_instantiate_grid(self):
         with self.assertRaises(Exception):
 
